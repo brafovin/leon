@@ -238,16 +238,22 @@ export class Track {
 
     // Straßenlaternen für Nachtwelten
     if (dark) {
-      const every2 = 16;
+      const every2 = 10;
       const n2 = Math.floor(this.n / every2) * 2;
       const poleGeo = new THREE.BoxGeometry(0.18, 7, 0.18);
       const poleMat = new THREE.MeshStandardMaterial({ color: 0x2b2b34, roughness: 0.7, metalness: 0.6 });
       const armGeo = new THREE.BoxGeometry(0.16, 0.16, 1.8);
-      const lampGeo = new THREE.SphereGeometry(0.4, 8, 6);
-      const lampMat = new THREE.MeshBasicMaterial({ color: 0xffd9a8 });
+      const lampGeo = new THREE.SphereGeometry(0.5, 8, 6);
+      const lampMat = new THREE.MeshBasicMaterial({ color: 0xffe3bb });
+      const glowGeo = new THREE.SphereGeometry(2.6, 10, 8);
+      const glowMat = new THREE.MeshBasicMaterial({
+        color: 0xffc98a, transparent: true, opacity: 0.13,
+        depthWrite: false, blending: THREE.AdditiveBlending, fog: false,
+      });
       const poles = new THREE.InstancedMesh(poleGeo, poleMat, n2);
       const arms = new THREE.InstancedMesh(armGeo, poleMat, n2);
       const lamps = new THREE.InstancedMesh(lampGeo, lampMat, n2);
+      const glows = new THREE.InstancedMesh(glowGeo, glowMat, n2);
       const mm = new THREE.Matrix4();
       const qq = new THREE.Quaternion();
       const vv = new THREE.Vector3();
@@ -265,11 +271,13 @@ export class Track {
             vv.set(bx - nr.x * side * 0.9, p.y + 6.9, bz - nr.z * side * 0.9), qq, ss));
           lamps.setMatrixAt(j, mm.compose(
             vv.set(bx - nr.x * side * 1.7, p.y + 6.75, bz - nr.z * side * 1.7), qq, ss));
+          glows.setMatrixAt(j, mm.compose(
+            vv.set(bx - nr.x * side * 1.7, p.y + 6.75, bz - nr.z * side * 1.7), qq, ss));
           j++;
         }
       }
-      poles.count = arms.count = lamps.count = j;
-      for (const im of [poles, arms, lamps]) { im.instanceMatrix.needsUpdate = true; g.add(im); }
+      poles.count = arms.count = lamps.count = glows.count = j;
+      for (const im of [poles, arms, lamps, glows]) { im.instanceMatrix.needsUpdate = true; g.add(im); }
     }
 
     return g;

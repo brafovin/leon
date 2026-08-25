@@ -82,6 +82,8 @@ const PROFILES = {
   ],
 };
 
+const BEVEL = 0.12;   // Rundung der Karosserie – vergrößert die Außenmaße
+
 function bodyGeometry(spec) {
   const prof = PROFILES[spec.style] || PROFILES.sedan;
   const shape = new THREE.Shape();
@@ -94,7 +96,7 @@ function bodyGeometry(spec) {
 
   const geo = new THREE.ExtrudeGeometry(shape, {
     depth: spec.W, bevelEnabled: true, bevelThickness: 0.09,
-    bevelSize: 0.12, bevelSegments: 3, curveSegments: 2,
+    bevelSize: BEVEL, bevelSegments: 3, curveSegments: 2,
   });
   geo.translate(0, 0, -spec.W / 2);
 
@@ -106,6 +108,9 @@ function bodyGeometry(spec) {
     const tx = Math.min(1, Math.abs(x) / halfL);
     let f = 1 - Math.pow(tx, 3) * 0.12;                  // Nase/Heck schmaler
     if (y > spec.H * 0.6) f *= 1 - ((y - spec.H * 0.6) / (spec.H * 0.4)) * 0.14; // Dach schmaler
+    // Schweller deutlich schmaler, damit die Räder frei stehen
+    const sill = spec.H * 0.46;
+    if (y < sill) f *= 1 - (1 - y / sill) * 0.2;
     pos.setZ(i, z * f);
   }
   pos.needsUpdate = true;
@@ -180,8 +185,8 @@ export function buildCar(spec) {
   model.add(tilt);
 
   const body = new THREE.Mesh(bodyGeometry(spec), new THREE.MeshPhysicalMaterial({
-    vertexColors: true, roughness: 0.34, metalness: 0.3,
-    clearcoat: 0.85, clearcoatRoughness: 0.14, envMapIntensity: 0.95,
+    vertexColors: true, roughness: 0.4, metalness: 0.28,
+    clearcoat: 0.5, clearcoatRoughness: 0.24, envMapIntensity: 0.7,
   }));
   body.castShadow = true;
   body.position.y = spec.wheelR * 0.52;
@@ -193,9 +198,9 @@ export function buildCar(spec) {
     clearcoat: 1, clearcoatRoughness: 0.05, envMapIntensity: 1.3,
   });
   const cabinFront = spec.L * 0.24, cabinRear = -spec.L * 0.32;
-  const beltY = spec.H * 0.63, roofY = spec.H * 0.86;
+  const beltY = spec.H * 0.63, roofY = spec.H * 0.85;
   const green = new THREE.Mesh(
-    new THREE.BoxGeometry(cabinFront - cabinRear, roofY - beltY, spec.W * 0.845),
+    new THREE.BoxGeometry(cabinFront - cabinRear, roofY - beltY, spec.W * 0.96),
     glassMat
   );
   green.position.set((cabinFront + cabinRear) / 2, (beltY + roofY) / 2 + spec.wheelR * 0.52, 0);
@@ -212,40 +217,41 @@ export function buildCar(spec) {
     return m;
   };
 
-  const noseX = spec.L * 0.5;
-  const tailX = -spec.L * 0.5;
+  // Außenflächen liegen um den Bevel-Betrag weiter außen als die Profilkontur
+  const noseX = spec.L * 0.5 + BEVEL;
+  const tailX = -spec.L * 0.5 - BEVEL;
 
   // Scheinwerfer + Rücklichter
   const headMat = new THREE.MeshStandardMaterial({
-    color: 0xffffff, emissive: 0xfff2cc, emissiveIntensity: 2.2, roughness: 0.2,
+    color: 0xe8eef5, emissive: 0xfff2cc, emissiveIntensity: 0.9, roughness: 0.18, metalness: 0.3,
   });
   const tailMat = new THREE.MeshStandardMaterial({
-    color: 0x4a0d10, emissive: 0xff1c1c, emissiveIntensity: 1.4, roughness: 0.3,
+    color: 0x6b1418, emissive: 0xff2020, emissiveIntensity: 2.0, roughness: 0.3,
   });
-  const lampGeo = new THREE.BoxGeometry(0.12, 0.16, 0.46);
+  const lampGeo = new THREE.BoxGeometry(0.18, 0.15, 0.46);
   const heads = [], tails = [];
   for (const s of [-1, 1]) {
-    heads.push(add(lampGeo, headMat, noseX - 0.06, spec.H * 0.42, s * spec.W * 0.32));
-    tails.push(add(new THREE.BoxGeometry(0.1, 0.14, 0.58), tailMat, tailX + 0.05, spec.H * 0.46, s * spec.W * 0.3));
+    heads.push(add(lampGeo, headMat, noseX - 0.04, spec.H * 0.42, s * spec.W * 0.3));
+    tails.push(add(new THREE.BoxGeometry(0.18, 0.2, 0.62), tailMat, tailX + 0.04, spec.H * 0.46, s * spec.W * 0.28));
   }
 
   // BMW-Niere bzw. Kühlergrill
   if (spec.kidney) {
     for (const s of [-1, 1]) {
-      add(new THREE.BoxGeometry(0.1, 0.42, 0.3), dark, noseX - 0.03, spec.H * 0.34, s * 0.19);
-      add(new THREE.BoxGeometry(0.04, 0.46, 0.34), chrome, noseX - 0.06, spec.H * 0.34, s * 0.19);
+      add(new THREE.BoxGeometry(0.12, 0.42, 0.3), dark, noseX - 0.05, spec.H * 0.34, s * 0.19);
+      add(new THREE.BoxGeometry(0.05, 0.5, 0.36), chrome, noseX - 0.02, spec.H * 0.34, s * 0.19);
     }
   } else {
-    add(new THREE.BoxGeometry(0.08, 0.26, spec.W * 0.5), dark, noseX - 0.04, spec.H * 0.3, 0);
+    add(new THREE.BoxGeometry(0.1, 0.26, spec.W * 0.5), dark, noseX - 0.04, spec.H * 0.3, 0);
   }
   // Lufteinlässe vorne
   for (const s of [-1, 1]) {
-    add(new THREE.BoxGeometry(0.1, 0.16, 0.34), dark, noseX - 0.08, spec.H * 0.16, s * spec.W * 0.3);
+    add(new THREE.BoxGeometry(0.12, 0.16, 0.34), dark, noseX - 0.06, spec.H * 0.16, s * spec.W * 0.3);
   }
 
   // Außenspiegel
   for (const s of [-1, 1]) {
-    add(new THREE.BoxGeometry(0.22, 0.09, 0.13), dark, spec.L * 0.1, spec.H * 0.66, s * (spec.W * 0.52));
+    add(new THREE.BoxGeometry(0.24, 0.1, 0.14), dark, spec.L * 0.11, spec.H * 0.68, s * (spec.W * 0.56));
   }
 
   // Heckflügel
@@ -264,7 +270,7 @@ export function buildCar(spec) {
   const pipeGeo = new THREE.CylinderGeometry(0.055, 0.055, 0.2, 10);
   pipeGeo.rotateZ(Math.PI / 2);
   const pipes = spec.quadPipes ? [-0.42, -0.28, 0.28, 0.42] : [-0.34, 0.34];
-  for (const z of pipes) add(pipeGeo, chrome, tailX - 0.06, spec.H * 0.12, z * spec.W);
+  for (const z of pipes) add(pipeGeo, chrome, tailX + 0.06, spec.H * 0.12, z * spec.W);
 
   // Räder
   const wheels = [];
@@ -278,7 +284,6 @@ export function buildCar(spec) {
     wheels.push({ pivot: steerPivot, spin, front });
   }
 
-  root.userData = { spec, wheels, tilt, body, heads, tails, headMat: headMat.clone(), tailMat };
-  root.userData.tailMat = tailMat;
+  root.userData = { spec, wheels, tilt, body, heads, tails, headMat, tailMat };
   return root;
 }

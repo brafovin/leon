@@ -152,7 +152,9 @@ export class Game {
     this.scene.add(sun.target);
     this.sun = sun;
 
-    this.scene.add(new THREE.HemisphereLight(s.top, s.bottom, s.hemi));
+    // Bodenfarbe des Hemisphere-Lichts = Geländefarbe, sonst wirken
+    // abgewandte Flächen unnatürlich hell (Himmelsfarbe von unten).
+    this.scene.add(new THREE.HemisphereLight(s.top, this.world.terrain.colMid, s.hemi));
     if (s.night) this.scene.add(new THREE.AmbientLight(0x3b2a68, 0.7));
 
     this.buildEnvironment();
@@ -289,11 +291,15 @@ export class Game {
     this.car = new CarPhysics(spec, this.terrain, this.track, this.props);
     this.car.placeOnTrack(0, 0);
 
+    if (this.world.sky.night) this.carMesh.userData.headMat.emissiveIntensity = 3.2;
+
     // Scheinwerferkegel in dunklen Welten
     if (this.world.sky.night && !this.headlight) {
-      this.headlight = new THREE.SpotLight(0xfff0d0, 260, 130, 0.42, 0.5, 1.6);
+      this.headlight = new THREE.SpotLight(0xfff0d0, 1400, 150, 0.34, 0.45, 1.3);
       this.headlight.target = new THREE.Object3D();
-      this.scene.add(this.headlight, this.headlight.target);
+      this.wideLight = new THREE.SpotLight(0xdfe6ff, 380, 60, 0.85, 0.9, 1.2);
+      this.wideLight.target = this.headlight.target;
+      this.scene.add(this.headlight, this.headlight.target, this.wideLight);
     }
   }
 
@@ -310,7 +316,7 @@ export class Game {
       mesh.visible = false;
       this.scene.add(mesh);
       this.rivalMeshes.push(mesh);
-      this.rivals.push(new Rival(this.track, this.terrain, spec, 0.9 + i * 0.06, (i - 1) * 3.4, 0));
+      this.rivals.push(new Rival(this.track, this.terrain, spec, 0.94 + i * 0.05, (i - 1) * 3.4, 0));
     }
   }
 
@@ -496,11 +502,12 @@ export class Game {
       const f = new THREE.Vector3(Math.sin(this.car.yaw), 0, Math.cos(this.car.yaw));
       this.headlight.position.copy(this.car.pos).addScaledVector(f, 1.6).add(new THREE.Vector3(0, 0.85, 0));
       this.headlight.target.position.copy(this.car.pos).addScaledVector(f, 42).add(new THREE.Vector3(0, 0.2, 0));
+      this.wideLight.position.copy(this.headlight.position);
     }
 
     this.audio.update(this.car, dt);
     this.hud.drawDial(this.car, dt);
-    this.hud.drawMap(this.track, this.car, this.rivals, this.race ? this.race.next : null);
+    this.hud.drawMap(this.track, this.car, this.race ? this.rivals : [], this.race ? this.race.next : null);
 
     this.renderer.render(this.scene, this.camera);
   }
@@ -567,7 +574,7 @@ export class Game {
     // Bremslichter
     mesh.userData.tailMat.emissiveIntensity = damp(
       mesh.userData.tailMat.emissiveIntensity,
-      this.input.state.brake > 0 ? 4.5 : this.world.sky.night ? 1.6 : 0.9, 12, dt);
+      this.input.state.brake > 0 ? 6 : this.world.sky.night ? 2.6 : 1.8, 12, dt);
   }
 
   updateCamera(dt, driving) {
@@ -629,6 +636,7 @@ export class Game {
     this.rivalMeshes = [];
     this.rivals = [];
     this.headlight = null;
+    this.wideLight = null;
     this.sun = null;
     this.water = null;
     this.stars = null;
