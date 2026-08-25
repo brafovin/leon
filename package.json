@@ -1,11 +1,12 @@
 {
   "name": "forza-horizon-6",
   "version": "1.0.0",
-  "description": "3D-Open-World-Rennspiel im Horizon-Stil mit fünf Welten – Three.js, ohne Build-Schritt",
+  "description": "3D-Open-World-Rennspiel im Horizon-Stil mit fünf Welten – Three.js, statisch ohne Bundler",
   "type": "module",
   "scripts": {
     "start": "node server.mjs",
-    "dev": "node server.mjs"
+    "dev": "node server.mjs",
+    "build": "node build.mjs"
   },
   "license": "MIT",
   "private": true
