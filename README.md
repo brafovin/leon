@@ -18,6 +18,26 @@ Dann <http://localhost:8080> im Browser öffnen. Jeder andere statische Server g
 genauso (`python3 -m http.server`, `npx http-server` …) – nur direkt per
 `file://` funktioniert es nicht, weil ES-Module über HTTP geladen werden müssen.
 
+## Deployment (Vercel & Co.)
+
+Das Spiel ist eine rein statische Seite. `npm run build` kopiert alles
+Auszuliefernde nach `dist/`:
+
+```bash
+npm run build      # erzeugt dist/ (index.html, style.css, src/, vendor/)
+```
+
+`vercel.json` legt genau das für Vercel fest – Framework `null`,
+Build `node build.mjs`, Ausgabeverzeichnis `dist`. Ohne diese Angaben findet
+Vercel im Projektwurzelverzeichnis kein eindeutiges Ziel und liefert nur eine
+404-Seite aus.
+
+Zeigt die Live-Version danach weiterhin 404, liegt es an den Projekt-
+einstellungen bei Vercel und nicht am Code:
+
+* **Root Directory** muss das Repository-Wurzelverzeichnis sein (Feld leer lassen).
+* **Production Branch** muss auf den Branch zeigen, auf dem der Code liegt.
+
 ## Die fünf Welten
 
 | # | Welt | Charakter |
