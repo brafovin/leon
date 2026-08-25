@@ -22,6 +22,7 @@ export const WORLDS = [
       top: 0x2f7fe0, bottom: 0xbfe6ff, sun: 0xfff2d0,
       elev: 0.62, azim: 0.9, sunI: 2.6, hemi: 0.75,
       fog: 0xbcd9ee, fogNear: 320, fogFar: 1750, stars: false,
+      cloud: 0.42, cloudColor: 0xffffff,
     },
     water: { level: -6, color: 0x1b7fa8, opacity: 0.86 },
     terrain: {
@@ -50,6 +51,7 @@ export const WORLDS = [
       top: 0x3f6c9e, bottom: 0xdfeaf5, sun: 0xffe9d2,
       elev: 0.36, azim: -1.5, sunI: 1.9, hemi: 0.85,
       fog: 0xcdddea, fogNear: 180, fogFar: 1250, stars: false,
+      cloud: 0.72, cloudColor: 0xe8eef6,
     },
     water: null,
     terrain: {
@@ -78,6 +80,7 @@ export const WORLDS = [
       top: 0x05030f, bottom: 0x2a1150, sun: 0x9b7bff,
       elev: 0.12, azim: 2.4, sunI: 0.7, hemi: 0.5, night: true,
       fog: 0x14082c, fogNear: 90, fogFar: 900, stars: true,
+      cloud: 0.5, cloudColor: 0x4a3a7a,
     },
     water: null,
     terrain: {
@@ -104,6 +107,7 @@ export const WORLDS = [
       top: 0xb85a2a, bottom: 0xffce8a, sun: 0xffb469,
       elev: 0.13, azim: 2.0, sunI: 2.3, hemi: 0.7,
       fog: 0xe8a765, fogNear: 150, fogFar: 1200, stars: false,
+      cloud: 0.3, cloudColor: 0xffd9a8,
     },
     water: null,
     terrain: {
@@ -132,6 +136,7 @@ export const WORLDS = [
       top: 0x2a5fa8, bottom: 0xffd2a6, sun: 0xffd9a0,
       elev: 0.2, azim: -0.6, sunI: 2.2, hemi: 0.7,
       fog: 0xd9dfe0, fogNear: 260, fogFar: 1600, stars: false,
+      cloud: 0.55, cloudColor: 0xffe0c2,
     },
     water: { level: -4, color: 0x16a3ad, opacity: 0.8 },
     terrain: {

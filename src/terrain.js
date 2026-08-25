@@ -1,5 +1,7 @@
 import * as THREE from "three";
 import { clamp, lerp, smoothstep, invLerp } from "./util.js";
+import { QUALITY } from "./device.js";
+import { grainTexture } from "./textures.js";
 
 /**
  * Höhenfeld der Welt. Das Terrain wird entlang der Strecke eingeebnet,
@@ -10,7 +12,7 @@ export class Terrain {
     this.world = world;
     this.noise = noise;
     this.size = world.size;
-    this.seg = 384;
+    this.seg = QUALITY.terrainSeg;
     this.half = this.size / 2;
     this.step = this.size / this.seg;
     const N = this.seg + 1;
@@ -116,9 +118,13 @@ export class Terrain {
     pos.needsUpdate = true;
     geo.computeVertexNormals();
 
+    const grain = grainTexture();
+    grain.repeat.set(this.size / 14, this.size / 14);
     const mesh = new THREE.Mesh(
       geo,
-      new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.96, metalness: 0 })
+      new THREE.MeshStandardMaterial({
+        vertexColors: true, roughness: 0.96, metalness: 0, map: grain,
+      })
     );
     mesh.receiveShadow = true;
     return mesh;
@@ -128,7 +134,7 @@ export class Terrain {
   buildWater() {
     const w = this.world.water;
     if (!w) return null;
-    const geo = new THREE.PlaneGeometry(this.size * 2.4, this.size * 2.4, 60, 60);
+    const geo = new THREE.PlaneGeometry(this.size * 2.4, this.size * 2.4, QUALITY.waterSeg, QUALITY.waterSeg);
     geo.rotateX(-Math.PI / 2);
     const mesh = new THREE.Mesh(
       geo,

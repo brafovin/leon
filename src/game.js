@@ -9,6 +9,8 @@ import { CarPhysics, Rival } from "./physics.js";
 import { Hud } from "./hud.js";
 import { Input } from "./input.js";
 import { Engine } from "./audio.js";
+import { QUALITY, isPhone, isWeak } from "./device.js";
+import { PostFX } from "./postfx.js";
 
 const LAPS = 2;
 const CAM_MODES = [
@@ -21,12 +23,13 @@ const CAM_MODES = [
 export class Game {
   constructor(canvas) {
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
-    this.renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    this.renderer.setPixelRatio(Math.min(devicePixelRatio, QUALITY.pixelRatio));
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.05;
 
+    this.post = new PostFX(this.renderer, { bloom: !isWeak });
     this.camera = new THREE.PerspectiveCamera(62, innerWidth / innerHeight, 0.4, 6000);
     this.scene = new THREE.Scene();
     this.clock = new THREE.Clock();
@@ -73,6 +76,7 @@ export class Game {
     this.camera.aspect = innerWidth / innerHeight;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(innerWidth, innerHeight);
+    this.post.setSize(innerWidth, innerHeight, this.renderer.getPixelRatio());
   }
 
   // ------------------------------------------------------------------ Welt
@@ -141,8 +145,8 @@ export class Game {
 
     const sun = new THREE.DirectionalLight(s.sun, s.sunI);
     sun.castShadow = true;
-    sun.shadow.mapSize.set(2048, 2048);
-    const d = 150;
+    sun.shadow.mapSize.set(QUALITY.shadowSize, QUALITY.shadowSize);
+    const d = QUALITY.shadowRange;
     sun.shadow.camera.left = -d; sun.shadow.camera.right = d;
     sun.shadow.camera.top = d; sun.shadow.camera.bottom = -d;
     sun.shadow.camera.near = 1; sun.shadow.camera.far = 700;
@@ -229,7 +233,7 @@ export class Game {
   }
 
   buildDust() {
-    const N = 320;
+    const N = QUALITY.dust;
     const pos = new Float32Array(N * 3).fill(-9999);
     const geo = new THREE.BufferGeometry();
     geo.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
@@ -431,13 +435,16 @@ export class Game {
     this.frameCount = 0;
     if (fps < 32 && this.quality === 2) {
       this.quality = 1;
-      this.renderer.setPixelRatio(1);
+      this.renderer.setPixelRatio(Math.min(devicePixelRatio, isPhone ? 1 : 1.25));
       this.renderer.shadowMap.enabled = false;
+      this.post.bloom = false;
+      this.post.setSize(innerWidth, innerHeight, this.renderer.getPixelRatio());
       this.scene.traverse((o) => { if (o.material) o.material.needsUpdate = true; });
       this.hud.toast("GRAFIK REDUZIERT", "#20e3ff", 1200);
     } else if (fps < 22 && this.quality === 1) {
       this.quality = 0;
-      this.renderer.setPixelRatio(0.75);
+      this.renderer.setPixelRatio(isPhone ? 0.7 : 0.75);
+      this.post.enabled = false;
       if (this.weather && this.weather.obj) this.weather.obj.visible = false;
     }
   }
@@ -485,7 +492,10 @@ export class Game {
 
     this.updateCamera(dt, driving);
     if (this.weather) this.weather.update(dt, this.camera.position, this.time);
-    if (this.sky) this.sky.position.copy(this.camera.position);
+    if (this.sky) {
+      this.sky.position.copy(this.camera.position);
+      this.sky.userData.mat.uniforms.time.value = this.time;
+    }
     if (this.stars) this.stars.position.copy(this.camera.position);
     if (this.water) {
       this.water.position.x = this.camera.position.x;
@@ -509,7 +519,7 @@ export class Game {
     this.hud.drawDial(this.car, dt);
     this.hud.drawMap(this.track, this.car, this.race ? this.rivals : [], this.race ? this.race.next : null);
 
-    this.renderer.render(this.scene, this.camera);
+    this.post.render(this.scene, this.camera);
   }
 
   /** Drift- und Sprungbonus im Stil der Skill-Ketten aus Horizon. */

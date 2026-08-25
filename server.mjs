@@ -28,4 +28,4 @@ createServer(async (req, res) => {
   } catch {
     res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" }).end("404");
   }
-}).listen(PORT, () => console.log(`Forza Horizon 6 läuft auf http://localhost:${PORT}`));
+}).listen(PORT, () => console.log(`Auto Drift läuft auf http://localhost:${PORT}`));

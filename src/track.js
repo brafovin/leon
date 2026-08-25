@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { makeRng, lerp } from "./util.js";
+import { asphaltTexture } from "./textures.js";
 
 const clampT = (t) => (t < 0 ? 0 : t > 1 ? 1 : t);
 
@@ -152,7 +153,7 @@ export class Track {
     const dark = world.sky.night;
 
     const ribbon = (halfW, yOff, step, dashed, lateral = 0) => {
-      const pos = [], idx = [];
+      const pos = [], idx = [], uv = [];
       let v = 0;
       const steps = Math.floor(this.n / step);
       for (let s = 0; s <= steps; s++) {
@@ -163,6 +164,8 @@ export class Track {
         const base = pos.length / 3;
         pos.push(cx - nr.x * halfW, p.y + yOff, cz - nr.z * halfW);
         pos.push(cx + nr.x * halfW, p.y + yOff, cz + nr.z * halfW);
+        const tv = this.arc[i] / 7;                // Textur alle 7 m wiederholen
+        uv.push(0, tv, 1, tv);
         if (v >= 0 && base >= 2) {
           idx.push(base - 2, base - 1, base, base - 1, base + 1, base);
         }
@@ -170,6 +173,7 @@ export class Track {
       }
       const geo = new THREE.BufferGeometry();
       geo.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+      geo.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2));
       geo.setIndex(idx);
       geo.computeVertexNormals();
       return geo;
@@ -179,9 +183,10 @@ export class Track {
     const road = new THREE.Mesh(
       ribbon(w, 0.13, 1, false),
       new THREE.MeshStandardMaterial({
-        color: dark ? 0x14141c : 0x2b2b31,
-        roughness: dark ? 0.35 : 0.92,
+        color: dark ? 0x1a1a24 : 0x34343b,
+        roughness: dark ? 0.35 : 0.9,
         metalness: dark ? 0.35 : 0.0,
+        map: asphaltTexture(),
       })
     );
     road.receiveShadow = true;

@@ -2,15 +2,35 @@ import { Game } from "./game.js";
 import { WORLDS, worldById } from "./worlds.js";
 import { CARS, carById } from "./cars.js";
 import { formatTime } from "./util.js";
+import { isTouch, enterImmersive } from "./device.js";
 
 // ------------------------------------------------------------- Spielstand
 const KEY = "fh6-save-v1";
-const defaultSave = () => ({ credits: 15000, owned: ["m5"], car: "m5", world: "bay", best: {} });
+const STARTER = "e30";              // BMW M3 E30 – gehört jedem von Anfang an
+const START_CREDITS = 999_000_000;  // Startguthaben
+const BONUS = 1;                    // Version des Startguthabens (für Altstände)
+const defaultSave = () => ({
+  credits: START_CREDITS, owned: [STARTER], car: STARTER, world: "bay", best: {},
+  starter: STARTER, bonus: BONUS,
+});
 function loadSave() {
   try {
     const s = JSON.parse(localStorage.getItem(KEY));
     if (!s || !Array.isArray(s.owned)) return defaultSave();
-    return { ...defaultSave(), ...s };
+    const save = { ...defaultSave(), ...s };
+    save.owned = [...new Set([STARTER, ...save.owned])];
+    // Einmalige Umstellung, wenn sich der Startwagen geändert hat
+    if (save.starter !== STARTER) {
+      save.starter = STARTER;
+      save.car = STARTER;
+    }
+    if (!save.owned.includes(save.car)) save.car = STARTER;
+    // Startguthaben nachträglich gutschreiben
+    if (save.bonus !== BONUS) {
+      save.bonus = BONUS;
+      save.credits = Math.max(save.credits, START_CREDITS);
+    }
+    return save;
   } catch { return defaultSave(); }
 }
 function persist() {
@@ -32,7 +52,42 @@ const ui = {
   result: el("result"), resPos: el("resPos"), resTitle: el("resTitle"),
   resTime: el("resTime"), resBest: el("resBest"), resCr: el("resCr"),
   again: el("againBtn"), roam: el("roamBtn"),
+  touch: el("touch"), rotate: el("rotate"), btnRace: el("btnRace"),
 };
+
+// ------------------------------------------------------------ Touch-Setup
+const touchUi = game.input.initTouch({
+  zone: el("stickZone"), stick: el("stick"), knob: el("stickKnob"),
+  gas: el("btnGas"), brake: el("btnBrake"), drift: el("btnDrift"), boost: el("btnBoost"),
+  race: el("btnRace"), cam: el("btnCam"), reset: el("btnReset"), pause: el("btnPause"),
+});
+if (touchUi) addEventListener("contextmenu", (e) => e.preventDefault());
+
+const setDriveUi = (on) => {
+  ui.hud.classList.toggle("hidden", !on);
+  ui.touch.classList.toggle("hidden", !on || !touchUi);
+};
+
+/** Hochkant lässt sich kaum steuern – Hinweis zeigen und solange pausieren. */
+let pausedByRotate = false;
+function checkOrientation() {
+  if (!touchUi) return;
+  const portrait = innerHeight > innerWidth;
+  const show = portrait && (game.state === "drive" || pausedByRotate);
+  ui.rotate.classList.toggle("hidden", !show);
+  if (show && game.state === "drive") {
+    game.state = "paused";
+    game.input.enabled = false;
+    pausedByRotate = true;
+  } else if (!show && pausedByRotate) {
+    pausedByRotate = false;
+    resume();
+  }
+}
+// Resize-/Orientation-Events kommen auf Mobilgeräten nicht immer zuverlässig an,
+// deshalb wird die Ausrichtung zusätzlich in der Hauptschleife geprüft.
+addEventListener("resize", checkOrientation);
+addEventListener("orientationchange", checkOrientation);
 
 let selectedWorld = save.world;
 let selectedCar = save.car;
@@ -113,9 +168,12 @@ async function enterWorld(worldId, carId) {
   game.state = "drive";
   game.clock.getDelta();                  // Zeitsprung nach dem Laden verwerfen
   ui.loading.classList.add("hidden");
-  ui.hud.classList.remove("hidden");
+  setDriveUi(true);
   game.hud.setCredits(save.credits);
-  game.hud.hint("<b>ENTER</b> Rennen starten · <b>W A S D</b> fahren · <b>SHIFT</b> Boost · <b>ESC</b> Menü");
+  game.hud.hint(touchUi
+    ? "Links wischen zum Lenken · <b>RENNEN</b> startet das Rennen"
+    : "<b>ENTER</b> Rennen starten · <b>W A S D</b> fahren · <b>SHIFT</b> Boost · <b>ESC</b> Menü");
+  checkOrientation();
   game.audio.start();
   loading = false;
 }
@@ -124,7 +182,9 @@ window.__backToMenu = () => backToMenu();
 function backToMenu() {
   game.abortRace();
   game.state = "menu";
-  ui.hud.classList.add("hidden");
+  pausedByRotate = false;
+  ui.rotate.classList.add("hidden");
+  setDriveUi(false);
   ui.pause.classList.add("hidden");
   ui.result.classList.add("hidden");
   ui.menu.classList.remove("hidden");
@@ -184,7 +244,10 @@ function resume() {
   game.clock.getDelta();
 }
 
-ui.play.onclick = () => enterWorld(selectedWorld, selectedCar);
+ui.play.onclick = () => {
+  enterImmersive();                       // Vollbild/Querformat (nur Handy)
+  enterWorld(selectedWorld, selectedCar);
+};
 ui.resume.onclick = resume;
 ui.toMenu.onclick = backToMenu;
 ui.again.onclick = () => {
@@ -202,10 +265,20 @@ ui.roam.onclick = () => {
 addEventListener("pointerdown", () => game.audio.start(), { once: true });
 
 // ------------------------------------------------------------ Hauptschleife
+let raceBtnHidden = null;
 function frame() {
   requestAnimationFrame(frame);
   if (game.state === "loading") return;
   if (game.car) game.update();
+  if (touchUi) checkOrientation();
+  // "RENNEN"-Knopf nur außerhalb eines laufenden Rennens anbieten
+  if (touchUi) {
+    const hide = !!game.race;
+    if (hide !== raceBtnHidden) {
+      raceBtnHidden = hide;
+      ui.btnRace.style.display = hide ? "none" : "";
+    }
+  }
 }
 renderMenu();
 ui.loading.classList.add("hidden");

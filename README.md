@@ -1,9 +1,9 @@
-# Forza Horizon 6 🏁
+# Auto Drift 🏁
 
-Ein 3D-Open-World-Rennspiel im Stil von Forza Horizon – komplett im Browser, ohne
-Build-Schritt und ohne Installation. Fünf handgemachte Festival-Welten, prozedural
-erzeugtes Gelände, Arcade-Fahrphysik mit Drift und Boost – und als Startwagen
-natürlich ein **BMW M5 Competition**.
+Ein 3D-Open-World-Rennspiel im Browser – ohne Build-Schritt und ohne Installation.
+Fünf handgemachte Welten, prozedural erzeugtes Gelände, Arcade-Fahrphysik mit
+Drift und Boost, Touch-Steuerung fürs Handy – und als Startwagen ein
+**BMW M3 (E30)**.
 
 ![Three.js](https://img.shields.io/badge/Three.js-r161-000?logo=three.js)
 ![No build step](https://img.shields.io/badge/Build-keiner-brightgreen)
@@ -54,6 +54,8 @@ Wetter, eigene Vegetation und eine eigene, prozedural erzeugte Rundstrecke mit
 
 ## Steuerung
 
+### Am Rechner
+
 | Taste | Funktion |
 |-------|----------|
 | `W` / `↑` | Gas |
@@ -70,15 +72,48 @@ Wetter, eigene Vegetation und eine eigene, prozedural erzeugte Rundstrecke mit
 Ein Gamepad wird ebenfalls unterstützt (RT = Gas, LT = Bremse, linker Stick = Lenkung,
 A = Handbremse, B = Boost).
 
+### Am Handy
+
+Auf Touchgeräten blendet das Spiel automatisch eine eigene Bedienung ein:
+
+* **Linke Bildschirmhälfte** – irgendwo antippen und ziehen: analoge Lenkung,
+  der Lenkknopf erscheint dort, wo der Finger aufsetzt.
+* **GAS / BREMSE** – große runde Pedale unten rechts.
+* **DRIFT / BOOST** – kleine Knöpfe darüber.
+* **RENNEN / KAM / RESET / II** – Aktionen oben rechts.
+
+Beim Start wird Vollbild und Querformat angefordert; hochkant erscheint ein
+Dreh-Hinweis und das Spiel pausiert so lange. Menü, Garage und Overlays sind
+für schmale und flache Displays eigens umgebaut. Je nach Gerät werden
+Geländeauflösung, Vegetationsdichte, Schatten, Wetterpartikel und
+Renderauflösung automatisch reduziert.
+
 ## Spielinhalt
 
 * **Freie Fahrt** in jeder Welt – die komplette 1,9 × 1,9 km große Karte ist befahrbar.
 * **Rennen** über zwei Runden gegen drei KI-Gegner, mit Platzierung, Rundenzeiten und Bestzeit-Speicherung.
 * **Skill-Punkte** für lange Drifts und weite Sprünge werden direkt in Credits umgerechnet.
-* **Garage** mit sieben Fahrzeugen: BMW M5 (Start), BMW M3 Touring, Ford Mustang GT,
-  Toyota GR Supra, Porsche 911 GT3, Lamborghini Huracán und Bugatti Chiron.
+* **Garage** mit acht Fahrzeugen: BMW M3 E30 (Start), BMW M5 Competition,
+  BMW M3 Touring, Ford Mustang GT, Toyota GR Supra, Porsche 911 GT3,
+  Lamborghini Huracán und Bugatti Chiron.
   Alle Fahrleistungen (Vmax, 0–100, Bremsweg, Antriebsart) sind in der Physik hinterlegt.
+* Startguthaben: **999.000.000 CR** – alle Fahrzeuge stehen damit sofort offen.
 * Fortschritt (Credits, Fahrzeuge, Bestzeiten) wird im `localStorage` gespeichert.
+
+## Grafik
+
+* **Prozedurale Wolken** im Himmels-Shader (fBm auf einer Kuppelprojektion),
+  je Welt in Menge und Farbe abgestimmt und langsam ziehend.
+* **Nachbearbeitung** ohne Zusatzbibliotheken: Szene in ein Rendertarget,
+  Bloom über Bright-Pass und zwei Blur-Durchgänge in halber Auflösung,
+  danach Farbraumwandlung, Sättigung, Kontrast und Vignette in einem Pass.
+* **Detailtexturen** für Asphalt und Gelände, im Code als Rauschen erzeugt
+  und über die Vertex-Farben gelegt.
+* **Umgebungs-Map** aus den Himmelsfarben für Lackreflexionen, Hemisphere-Licht
+  mit der Geländefarbe als Bodenfarbe.
+
+Auf schwacher Hardware werden Bloom und danach die gesamte Nachbearbeitung
+automatisch abgeschaltet.
 
 ## Technik
 
@@ -97,6 +132,9 @@ src/
   terrain.js        Höhenfeld, eingeebnet entlang der Straße, Vertex-Farben, Wasser
   props.js          Vegetation & Hochhäuser als InstancedMesh + Kollision
   cars.js           Fahrzeugdaten und Karosseriebau aus Silhouetten
+  postfx.js         Bloom, Farbkorrektur und Vignette
+  textures.js       prozedurale Detailtexturen
+  device.js         Geräteerkennung und Qualitätsstufen
   physics.js        Fahrphysik (Gänge, Grip, Drift, Sprünge) und KI-Gegner
   sky.js            Himmels-Shader, Sterne, Regen/Schnee/Sand
   hud.js            Tacho und Minimap auf 2D-Canvas
@@ -112,7 +150,7 @@ Bemerkenswerte Details:
 * **Fahrphysik:** Längs- und Querkräfte werden getrennt berechnet; Gänge, Drehmomentkurve,
   Luft- und Rollwiderstand sind so abgestimmt, dass jedes Auto seine angegebene
   Höchstgeschwindigkeit tatsächlich erreicht (M5: 302 km/h gemessen, 0–100 in 2,8 s).
-* **Kein einziges Asset:** Autos, Bäume, Häuser, Himmel, Reflexionen und Sound
-  entstehen zur Laufzeit im Code.
+* **Kein einziges Asset:** Autos, Bäume, Häuser, Himmel, Wolken, Texturen,
+  Reflexionen und Sound entstehen zur Laufzeit im Code.
 * **Qualitätsautomatik:** Sinkt die Bildrate, werden Auflösung, Schatten und
   Wetterpartikel automatisch reduziert.

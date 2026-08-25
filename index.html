@@ -2,8 +2,11 @@
 <html lang="de">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-<title>Forza Horizon 6</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#05040a" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<title>Auto Drift</title>
 <link rel="stylesheet" href="style.css" />
 <script type="importmap">
 {
@@ -19,7 +22,7 @@
 <!-- ========== LADEBILDSCHIRM ========== -->
 <div id="loading" class="overlay">
   <div class="loader-box">
-    <div class="brand"><span>FORZA</span> HORIZON <b>6</b></div>
+    <div class="brand"><span>AUTO</span> <b>DRIFT</b></div>
     <div class="bar"><i id="loadbar"></i></div>
     <div class="loadtext" id="loadtext">Welt wird generiert…</div>
   </div>
@@ -28,8 +31,8 @@
 <!-- ========== HAUPTMENÜ ========== -->
 <div id="menu" class="overlay hidden">
   <div class="menu-head">
-    <div class="brand"><span>FORZA</span> HORIZON <b>6</b></div>
-    <div class="sub">Wähle dein Horizon-Festival</div>
+    <div class="brand"><span>AUTO</span> <b>DRIFT</b></div>
+    <div class="sub">Wähle deine Welt</div>
   </div>
 
   <div id="worlds" class="worlds"></div>
@@ -70,16 +73,51 @@
   </div>
 </div>
 
+<!-- ========== TOUCH-STEUERUNG ========== -->
+<div id="touch" class="hidden">
+  <div id="stickZone" class="stickzone">
+    <div id="stick" class="stick"><i id="stickKnob"></i></div>
+  </div>
+
+  <div class="pedals">
+    <div class="prow">
+      <button id="btnDrift" class="tbtn mini">DRIFT</button>
+      <button id="btnBoost" class="tbtn mini cyan">BOOST</button>
+    </div>
+    <div class="prow">
+      <button id="btnBrake" class="tbtn pedal brake">BREMSE</button>
+      <button id="btnGas" class="tbtn pedal gas">GAS</button>
+    </div>
+  </div>
+
+  <div class="tactions">
+    <button id="btnRace" class="tbtn action wide">RENNEN</button>
+    <button id="btnCam" class="tbtn action" aria-label="Kamera wechseln">KAM</button>
+    <button id="btnReset" class="tbtn action" aria-label="Auto zurücksetzen">RESET</button>
+    <button id="btnPause" class="tbtn action" aria-label="Pause">II</button>
+  </div>
+</div>
+
+<div id="rotate" class="rotate hidden">
+  <div class="rotbox"><div class="phone"></div>Bitte Gerät quer halten</div>
+</div>
+
 <!-- ========== PAUSE ========== -->
 <div id="pause" class="overlay hidden">
   <div class="pause-box">
     <h2>PAUSE</h2>
-    <div class="keys">
+    <div class="keys keys-kbd">
       <div><b>W / ↑</b> Gas</div><div><b>S / ↓</b> Bremse &amp; Rückwärts</div>
       <div><b>A D / ← →</b> Lenken</div><div><b>LEERTASTE</b> Handbremse (Drift)</div>
       <div><b>SHIFT</b> Boost</div><div><b>C</b> Kamera</div>
       <div><b>R</b> Auto zurücksetzen</div><div><b>ENTER</b> Rennen starten</div>
       <div><b>M</b> Sound an/aus</div><div><b>ESC</b> Menü</div>
+    </div>
+    <div class="keys keys-touch">
+      <div><b>Links wischen</b> Lenken</div><div><b>GAS / BREMSE</b> Fahren</div>
+      <div><b>DRIFT</b> Handbremse</div><div><b>BOOST</b> Turbo</div>
+      <div><b>RENNEN</b> Rennen starten</div><div><b>KAM</b> Kameraansicht</div>
+      <div><b>RESET</b> Auto zurücksetzen</div><div><b>II</b> Pause &amp; Menü</div>
     </div>
     <div class="pbtns">
       <button id="resumeBtn" class="play">WEITER</button>

@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { makeRng } from "./util.js";
+import { QUALITY } from "./device.js";
 
 /**
  * Streut Bäume / Felsen / Hochhäuser über die Welt (InstancedMesh),
@@ -20,7 +21,7 @@ export class Props {
 
     // 1) Gültige Positionen sammeln
     const spots = [];
-    const need = world.props.count;
+    const need = Math.round(world.props.count * QUALITY.propScale);
     let guard = 0;
     while (spots.length < need && guard++ < need * 30) {
       const x = (rng() * 2 - 1) * half;
