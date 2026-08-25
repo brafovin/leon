@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<title>Forza Horizon 6</title>
+<link rel="stylesheet" href="style.css" />
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three.module.js"
+  }
+}
+</script>
+</head>
+<body>
+<canvas id="scene"></canvas>
+
+<!-- ========== LADEBILDSCHIRM ========== -->
+<div id="loading" class="overlay">
+  <div class="loader-box">
+    <div class="brand"><span>FORZA</span> HORIZON <b>6</b></div>
+    <div class="bar"><i id="loadbar"></i></div>
+    <div class="loadtext" id="loadtext">Welt wird generiert…</div>
+  </div>
+</div>
+
+<!-- ========== HAUPTMENÜ ========== -->
+<div id="menu" class="overlay hidden">
+  <div class="menu-head">
+    <div class="brand"><span>FORZA</span> HORIZON <b>6</b></div>
+    <div class="sub">Wähle dein Horizon-Festival</div>
+  </div>
+
+  <div id="worlds" class="worlds"></div>
+
+  <div class="menu-foot">
+    <div class="garage">
+      <div class="gtitle">Dein Wagen</div>
+      <div id="carPicker" class="carpicker"></div>
+    </div>
+    <div class="stats">
+      <div class="credit">CR <b id="creditsView">0</b></div>
+      <button id="playBtn" class="play">FAHREN</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== HUD ========== -->
+<div id="hud" class="hidden">
+  <div class="hud-top">
+    <div class="worldtag"><b id="hudWorld">—</b><span id="hudWeather"></span></div>
+    <div id="raceBox" class="racebox hidden">
+      <div class="rrow"><span>RUNDE</span><b id="hudLap">1/2</b></div>
+      <div class="rrow"><span>ZEIT</span><b id="hudTime">0:00.00</b></div>
+      <div class="rrow"><span>POS</span><b id="hudPos">1/4</b></div>
+    </div>
+    <div class="credit hud-credit">CR <b id="hudCredits">0</b></div>
+  </div>
+
+  <div id="hint" class="hint">Drücke <b>ENTER</b> um das Rennen zu starten · <b>ESC</b> Menü</div>
+  <div id="toast" class="toast"></div>
+
+  <div class="hud-bottom">
+    <canvas id="minimap" width="230" height="230"></canvas>
+    <div class="dialwrap">
+      <canvas id="dial" width="340" height="220"></canvas>
+      <div class="boostwrap"><div class="boostlabel">BOOST</div><div class="boost"><i id="boostbar"></i></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== PAUSE ========== -->
+<div id="pause" class="overlay hidden">
+  <div class="pause-box">
+    <h2>PAUSE</h2>
+    <div class="keys">
+      <div><b>W / ↑</b> Gas</div><div><b>S / ↓</b> Bremse &amp; Rückwärts</div>
+      <div><b>A D / ← →</b> Lenken</div><div><b>LEERTASTE</b> Handbremse (Drift)</div>
+      <div><b>SHIFT</b> Boost</div><div><b>C</b> Kamera</div>
+      <div><b>R</b> Auto zurücksetzen</div><div><b>ENTER</b> Rennen starten</div>
+      <div><b>M</b> Sound an/aus</div><div><b>ESC</b> Menü</div>
+    </div>
+    <div class="pbtns">
+      <button id="resumeBtn" class="play">WEITER</button>
+      <button id="menuBtn" class="ghost">ZUM FESTIVAL-MENÜ</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== ERGEBNIS ========== -->
+<div id="result" class="overlay hidden">
+  <div class="result-box">
+    <div class="pos" id="resPos">P1</div>
+    <h2 id="resTitle">Rennen beendet</h2>
+    <div class="rline"><span>Gesamtzeit</span><b id="resTime">–</b></div>
+    <div class="rline"><span>Beste Runde</span><b id="resBest">–</b></div>
+    <div class="rline reward"><span>Belohnung</span><b id="resCr">+0 CR</b></div>
+    <div class="pbtns">
+      <button id="againBtn" class="play">NOCHMAL</button>
+      <button id="roamBtn" class="ghost">FREIE FAHRT</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="src/main.js"></script>
+</body>
+</html>
