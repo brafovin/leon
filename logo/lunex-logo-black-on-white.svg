@@ -17,10 +17,5 @@
     <g fill="#000000" stroke="none">
       <circle cx="70" cy="217" r="6"/><circle cx="158" cy="203" r="5"/><circle cx="262" cy="226" r="7"/><circle cx="372" cy="209" r="5"/><circle cx="462" cy="215" r="6"/>
     </g>
-    <g fill="#ffffff" stroke="#000000" stroke-width="6" stroke-linejoin="miter">
-      <path d="M114 134 L140 152 L114 170 Z"/>
-      <path d="M480 40 L516 36 L500 68 Z"/>
-      <path d="M36 44 L52 24 L66 44 Z"/>
-    </g>
   </g>
 </svg>
