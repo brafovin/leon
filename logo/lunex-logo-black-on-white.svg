@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 160" width="520" height="160" role="img" aria-label="lunex">
+  <rect width="520" height="160" fill="#ffffff"/>
+  <defs>
+    <mask id="m">
+      <rect width="160" height="160" fill="#fff"/>
+      <circle cx="98" cy="68" r="42" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="80" cy="80" r="56" fill="#000000" mask="url(#m)"/>
+  <text x="160" y="102" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="72" font-weight="700" letter-spacing="6" fill="#000000">lunex</text>
+</svg>
