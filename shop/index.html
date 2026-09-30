@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#faf7f2" />
+<title>Nordlicht – Online-Shop (Skizze)</title>
+<style>
+  :root {
+    --bg: #faf7f2;
+    --surface: #ffffff;
+    --ink: #1c1b1a;
+    --muted: #6d6a65;
+    --line: #e8e2d9;
+    --accent: #e4572e;
+    --accent-ink: #ffffff;
+    --dark: #1c1b1a;
+    --radius: 18px;
+    --shadow: 0 10px 30px -12px rgba(40, 30, 20, .22);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141312; --surface: #1e1d1b; --ink: #f4efe8; --muted: #a29d94;
+      --line: #2e2c29; --dark: #0c0b0b; --shadow: 0 10px 30px -12px rgba(0,0,0,.6);
+    }
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+
+  /* Ankündigungsleiste */
+  .announce { background: var(--dark); color: #f4efe8; text-align: center; font-size: 13px; padding: 8px 12px; letter-spacing: .02em; }
+
+  /* Header */
+  header { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+  .nav { display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 20px; }
+  .logo { font-weight: 800; font-size: 22px; letter-spacing: -.02em; display: flex; align-items: center; gap: 8px; }
+  .logo i { width: 14px; height: 14px; border-radius: 50%; background: var(--accent); display: inline-block; }
+  .links { display: flex; gap: 28px; font-size: 15px; color: var(--muted); }
+  .links a:hover { color: var(--ink); }
+  .icons { display: flex; gap: 6px; }
+  .icon-btn { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; position: relative; }
+  .icon-btn:hover { background: var(--line); }
+  .icon-btn svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .badge { position: absolute; top: 2px; right: 0; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; display: grid; place-items: center; transition: transform .2s; }
+  .badge.pop { transform: scale(1.4); }
+
+  /* Hero */
+  .hero { display: grid; grid-template-columns: 1.05fr 1fr; gap: 40px; align-items: center; padding: 64px 0 56px; }
+  .eyebrow { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+  h1 { font-size: clamp(38px, 6vw, 68px); line-height: 1.02; letter-spacing: -.035em; font-weight: 800; }
+  h1 em { font-style: normal; color: var(--accent); }
+  .hero p { color: var(--muted); font-size: 18px; max-width: 46ch; margin: 20px 0 32px; }
+  .cta { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn { padding: 14px 26px; border-radius: 999px; font-weight: 600; transition: transform .15s, box-shadow .15s, background .15s; }
+  .btn:active { transform: scale(.97); }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); box-shadow: 0 8px 20px -8px var(--accent); }
+  .btn.primary:hover { transform: translateY(-2px); }
+  .btn.ghost { border: 1.5px solid var(--line); }
+  .btn.ghost:hover { border-color: var(--ink); }
+  .trust { display: flex; gap: 22px; margin-top: 36px; font-size: 14px; color: var(--muted); flex-wrap: wrap; }
+  .trust span::before { content: "✓"; color: var(--accent); font-weight: 800; margin-right: 6px; }
+
+  .hero-art { position: relative; aspect-ratio: 1 / 1.05; border-radius: 36px; overflow: hidden;
+    background: radial-gradient(120% 90% at 20% 10%, #ffd7b8 0%, #f6a27a 45%, #e4572e 100%); box-shadow: var(--shadow); }
+  .hero-art .sun { position: absolute; width: 46%; aspect-ratio: 1; border-radius: 50%; right: 12%; top: 12%; background: #fff3e2; opacity: .9; }
+  .hero-art .hill { position: absolute; left: -10%; right: -10%; border-radius: 50% 50% 0 0; }
+  .hero-art .h1 { bottom: -18%; height: 62%; background: #2b2320; }
+  .hero-art .h2 { bottom: -28%; height: 60%; background: #3d302b; left: 25%; }
+  .hero-art .tag { position: absolute; left: 22px; bottom: 22px; background: var(--surface); color: var(--ink); border-radius: 16px; padding: 12px 16px; box-shadow: var(--shadow); display: flex; gap: 12px; align-items: center; font-size: 14px; }
+  .hero-art .tag b { display: block; font-size: 15px; }
+  .hero-art .tag small { color: var(--muted); }
+  .hero-art .stars { position: absolute; top: 16px; left: 18px; background: rgba(255,255,255,.85); color: #1c1b1a; border-radius: 999px; padding: 6px 12px; font-size: 13px; font-weight: 600; }
+
+  /* Kategorien */
+  section { padding: 40px 0; }
+  .head { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 26px; }
+  h2 { font-size: clamp(26px, 3.4vw, 36px); letter-spacing: -.025em; line-height: 1.1; }
+  .head a { color: var(--accent); font-weight: 600; font-size: 15px; white-space: nowrap; }
+  .cats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .cat { border-radius: var(--radius); padding: 22px; min-height: 150px; display: flex; flex-direction: column; justify-content: flex-end; color: #1c1b1a; transition: transform .2s; position: relative; overflow: hidden; }
+  .cat:hover { transform: translateY(-4px); }
+  .cat b { font-size: 18px; } .cat small { opacity: .7; }
+  .cat::after { content: "→"; position: absolute; top: 18px; right: 20px; font-size: 20px; opacity: .6; }
+
+  /* Filter */
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+  .chip { padding: 8px 18px; border-radius: 999px; border: 1.5px solid var(--line); font-size: 14px; font-weight: 500; transition: .15s; }
+  .chip:hover { border-color: var(--ink); }
+  .chip.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+  /* Produkte */
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+  .card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--line); overflow: hidden; transition: transform .25s, box-shadow .25s; display: flex; flex-direction: column; }
+  .card:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
+  .thumb { aspect-ratio: 1 / 1; position: relative; display: grid; place-items: center; }
+  .thumb svg { width: 56%; height: 56%; transition: transform .35s; filter: drop-shadow(0 14px 14px rgba(0,0,0,.18)); }
+  .card:hover .thumb svg { transform: scale(1.08) rotate(-4deg); }
+  .pill { position: absolute; top: 12px; left: 12px; background: var(--surface); color: var(--ink); border-radius: 999px; font-size: 12px; font-weight: 700; padding: 4px 10px; }
+  .pill.sale { background: var(--accent); color: #fff; }
+  .fav { position: absolute; top: 8px; right: 8px; width: 36px; height: 36px; border-radius: 50%; background: var(--surface); display: grid; place-items: center; opacity: 0; transition: .2s; }
+  .card:hover .fav, .fav.on { opacity: 1; }
+  .fav svg { width: 18px; height: 18px; stroke: var(--ink); fill: none; stroke-width: 2; }
+  .fav.on svg { fill: var(--accent); stroke: var(--accent); }
+  .info { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .info .cat-name { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+  .info h3 { font-size: 17px; letter-spacing: -.01em; }
+  .rating { font-size: 13px; color: var(--muted); }
+  .rating b { color: #e8a317; letter-spacing: 1px; }
+  .buy { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 12px; }
+  .price { font-weight: 700; font-size: 18px; }
+  .price s { color: var(--muted); font-weight: 400; font-size: 14px; margin-left: 6px; }
+  .add { width: 42px; height: 42px; border-radius: 50%; background: var(--ink); color: var(--bg); display: grid; place-items: center; font-size: 22px; transition: .15s; }
+  .add:hover { background: var(--accent); transform: rotate(90deg); }
+
+  /* Banner */
+  .promo { border-radius: 32px; background: var(--dark); color: #f4efe8; padding: 56px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; align-items: center; position: relative; overflow: hidden; }
+  .promo::before { content: ""; position: absolute; width: 380px; height: 380px; border-radius: 50%; right: -80px; top: -120px; background: radial-gradient(circle, var(--accent), transparent 70%); opacity: .55; }
+  .promo h2 { font-size: clamp(28px, 4vw, 44px); } .promo p { color: #b9b3aa; margin: 12px 0 0; }
+  .promo form { display: flex; gap: 8px; position: relative; }
+  .promo input { flex: 1; min-width: 0; padding: 14px 20px; border-radius: 999px; border: 1.5px solid #3a3733; background: rgba(255,255,255,.06); color: #fff; font: inherit; }
+  .promo input::placeholder { color: #8d877e; }
+  .promo input:focus { outline: 2px solid var(--accent); border-color: transparent; }
+
+  /* Vorteile */
+  .perks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .perk { padding: 24px; border-radius: var(--radius); border: 1px solid var(--line); background: var(--surface); display: flex; gap: 16px; }
+  .perk .dot { flex: none; width: 46px; height: 46px; border-radius: 14px; background: color-mix(in srgb, var(--accent) 15%, transparent); display: grid; place-items: center; font-size: 22px; }
+  .perk b { display: block; } .perk span { color: var(--muted); font-size: 14px; }
+
+  footer { margin-top: 56px; border-top: 1px solid var(--line); padding: 44px 0 32px; color: var(--muted); font-size: 14px; }
+  .fgrid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 30px; }
+  footer h4 { color: var(--ink); margin-bottom: 12px; font-size: 14px; }
+  footer li { list-style: none; margin-bottom: 8px; } footer ul { padding: 0; }
+  .copy { margin-top: 34px; padding-top: 20px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+
+  /* Warenkorb */
+  .scrim { position: fixed; inset: 0; background: rgba(0,0,0,.45); opacity: 0; pointer-events: none; transition: .3s; z-index: 40; }
+  .scrim.open { opacity: 1; pointer-events: auto; }
+  .drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(420px, 100%); background: var(--bg); z-index: 50; transform: translateX(105%); transition: transform .35s cubic-bezier(.2,.8,.2,1); display: flex; flex-direction: column; box-shadow: -20px 0 50px -20px rgba(0,0,0,.4); }
+  .drawer.open { transform: none; }
+  .drawer header { position: static; display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; }
+  .drawer h3 { font-size: 20px; }
+  .lines { flex: 1; overflow: auto; padding: 0 22px; }
+  .line { display: grid; grid-template-columns: 64px 1fr auto; gap: 14px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .line .mini { width: 64px; height: 64px; border-radius: 14px; display: grid; place-items: center; } .line .mini svg { width: 70%; height: 70%; }
+  .line b { display: block; font-size: 15px; } .line small { color: var(--muted); }
+  .qty { display: inline-flex; align-items: center; gap: 10px; margin-top: 4px; border: 1px solid var(--line); border-radius: 999px; padding: 0 4px; }
+  .qty button { width: 26px; height: 26px; font-size: 16px; }
+  .empty { text-align: center; color: var(--muted); padding: 60px 0; }
+  .sum { padding: 20px 22px 24px; border-top: 1px solid var(--line); background: var(--surface); }
+  .sum .row { display: flex; justify-content: space-between; margin-bottom: 6px; color: var(--muted); font-size: 14px; }
+  .sum .row.total { color: var(--ink); font-size: 19px; font-weight: 700; margin: 10px 0 16px; }
+  .sum .btn { width: 100%; text-align: center; display: block; }
+
+  .toast { position: fixed; left: 50%; bottom: 26px; transform: translate(-50%, 90px); background: var(--ink); color: var(--bg); padding: 12px 22px; border-radius: 999px; font-size: 14px; z-index: 60; transition: transform .3s; }
+  .toast.show { transform: translate(-50%, 0); }
+
+  @media (max-width: 960px) {
+    .grid, .cats { grid-template-columns: repeat(2, 1fr); }
+    .hero, .promo { grid-template-columns: 1fr; }
+    .hero { padding-top: 36px; } .hero-art { aspect-ratio: 1.3 / 1; }
+    .perks { grid-template-columns: 1fr; } .fgrid { grid-template-columns: 1fr 1fr; }
+    .links { display: none; } .promo { padding: 36px 26px; }
+  }
+  @media (max-width: 520px) {
+    .grid { gap: 12px; } .info { padding: 12px; } .info h3 { font-size: 15px; }
+    .fav { opacity: 1; } .promo form { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="announce">Kostenloser Versand ab 50 € · 30 Tage Rückgabe · Nachhaltig verpackt</div>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#"><i></i>Nordlicht</a>
+    <nav class="links">
+      <a href="#produkte">Neuheiten</a>
+      <a href="#kategorien">Kategorien</a>
+      <a href="#produkte">Angebote</a>
+      <a href="#newsletter">Newsletter</a>
+    </nav>
+    <div class="icons">
+      <button class="icon-btn" aria-label="Suchen"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+      <button class="icon-btn" aria-label="Konto"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/></svg></button>
+      <button class="icon-btn" id="openCart" aria-label="Warenkorb"><svg viewBox="0 0 24 24"><path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span class="badge" id="count">0</span></button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- HERO -->
+  <div class="hero">
+    <div>
+      <span class="eyebrow">Neue Kollektion 2026</span>
+      <h1>Schöne Dinge für dein <em>Zuhause</em> &amp; unterwegs.</h1>
+      <p>Handverlesene Produkte mit Charakter – fair produziert, langlebig und schnell bei dir. Entdecke Favoriten, die man jeden Tag gern benutzt.</p>
+      <div class="cta">
+        <a class="btn primary" href="#produkte">Jetzt entdecken</a>
+        <a class="btn ghost" href="#kategorien">Kategorien ansehen</a>
+      </div>
+      <div class="trust"><span>Versand in 1–2 Tagen</span><span>Sicher bezahlen</span><span>4,8 ★ Bewertung</span></div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="sun"></div><div class="hill h2"></div><div class="hill h1"></div>
+      <div class="stars">★ Bestseller des Monats</div>
+      <div class="tag"><div><b>Kopfhörer Aura</b><small>ab 129,00 €</small></div></div>
+    </div>
+  </div>
+
+  <!-- KATEGORIEN -->
+  <section id="kategorien">
+    <div class="head"><h2>Nach Kategorie stöbern</h2></div>
+    <div class="cats">
+      <a class="cat" href="#produkte" data-f="Audio" style="background:#f6d9c7"><b>Audio</b><small>Klang, der bleibt</small></a>
+      <a class="cat" href="#produkte" data-f="Mode" style="background:#d5e4d0"><b>Mode</b><small>Zeitlos &amp; bequem</small></a>
+      <a class="cat" href="#produkte" data-f="Wohnen" style="background:#dcd6ee"><b>Wohnen</b><small>Licht &amp; Gemütlichkeit</small></a>
+      <a class="cat" href="#produkte" data-f="Accessoires" style="background:#f3e3a9"><b>Accessoires</b><small>Kleine Details</small></a>
+    </div>
+  </section>
+
+  <!-- PRODUKTE -->
+  <section id="produkte">
+    <div class="head"><h2>Beliebte Produkte</h2><a href="#">Alle ansehen →</a></div>
+    <div class="filters" id="filters"></div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <!-- PROMO -->
+  <section id="newsletter">
+    <div class="promo">
+      <div style="position:relative">
+        <h2>10 % Rabatt auf deine erste Bestellung</h2>
+        <p>Trag dich für den Newsletter ein – wir melden uns nur, wenn es sich lohnt.</p>
+      </div>
+      <form onsubmit="event.preventDefault(); toast('Danke! Dein Gutschein ist unterwegs ✉️'); this.reset();">
+        <input type="email" required placeholder="deine@email.de" aria-label="E-Mail" />
+        <button class="btn primary">Anmelden</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- VORTEILE -->
+  <section>
+    <div class="perks">
+      <div class="perk"><div class="dot">🚚</div><div><b>Schneller Versand</b><span>Heute bestellt, in 1–2 Werktagen da.</span></div></div>
+      <div class="perk"><div class="dot">↩️</div><div><b>30 Tage Rückgabe</b><span>Gefällt nicht? Einfach zurücksenden.</span></div></div>
+      <div class="perk"><div class="dot">🌱</div><div><b>Nachhaltig</b><span>Plastikfrei verpackt, klimaneutral geliefert.</span></div></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div><a class="logo" href="#" style="margin-bottom:12px"><i></i>Nordlicht</a><p>Schöne Produkte für den Alltag.<br>Skizze eines Online-Shops.</p></div>
+      <div><h4>Shop</h4><ul><li>Neuheiten</li><li>Bestseller</li><li>Angebote</li></ul></div>
+      <div><h4>Hilfe</h4><ul><li>Versand</li><li>Rückgabe</li><li>Kontakt</li></ul></div>
+      <div><h4>Rechtliches</h4><ul><li>Impressum</li><li>Datenschutz</li><li>AGB</li></ul></div>
+    </div>
+    <div class="copy"><span>© 2026 Nordlicht</span><span>Visa · Mastercard · PayPal · Klarna</span></div>
+  </div>
+</footer>
+
+<!-- WARENKORB -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Warenkorb">
+  <header><h3>Dein Warenkorb</h3><button class="icon-btn" id="closeCart" aria-label="Schließen">✕</button></header>
+  <div class="lines" id="lines"></div>
+  <div class="sum">
+    <div class="row"><span>Zwischensumme</span><span id="sub">0,00 €</span></div>
+    <div class="row"><span>Versand</span><span id="ship">–</span></div>
+    <div class="row total"><span>Gesamt</span><span id="total">0,00 €</span></div>
+    <button class="btn primary" onclick="toast('Das ist nur eine Skizze – Kasse folgt 🙂')">Zur Kasse</button>
+  </div>
+</aside>
+<div class="toast" id="toast"></div>
+
+<script>
+  // Einfache Produkt-Illustrationen als SVG (keine externen Bilder nötig)
+  const art = {
+    kopfhoerer: '<svg viewBox="0 0 100 100"><path d="M18 60V50a32 32 0 0 1 64 0v10" fill="none" stroke="#1c1b1a" stroke-width="6" stroke-linecap="round"/><rect x="10" y="56" width="20" height="30" rx="9" fill="#e4572e"/><rect x="70" y="56" width="20" height="30" rx="9" fill="#e4572e"/></svg>',
+    uhr: '<svg viewBox="0 0 100 100"><rect x="34" y="6" width="32" height="88" rx="10" fill="#3d302b"/><circle cx="50" cy="50" r="25" fill="#faf7f2" stroke="#1c1b1a" stroke-width="5"/><path d="M50 50V34M50 50l11 7" stroke="#1c1b1a" stroke-width="4" stroke-linecap="round"/><circle cx="50" cy="50" r="3" fill="#e4572e"/></svg>',
+    sneaker: '<svg viewBox="0 0 100 100"><path d="M8 66c0-8 3-14 8-16l14-4 8 8 12 3c12 1 26 6 30 14v5H8Z" fill="#fff" stroke="#1c1b1a" stroke-width="4" stroke-linejoin="round"/><path d="M8 72h84v7a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4Z" fill="#e4572e"/><path d="M38 54l5 6M46 56l5 6" stroke="#1c1b1a" stroke-width="3" stroke-linecap="round"/></svg>',
+    rucksack: '<svg viewBox="0 0 100 100"><rect x="20" y="16" width="60" height="74" rx="22" fill="#4f6b52"/><rect x="30" y="52" width="40" height="26" rx="8" fill="#3b523d"/><path d="M40 16v-4a10 10 0 0 1 20 0v4" fill="none" stroke="#2b3a2d" stroke-width="5"/><rect x="44" y="60" width="12" height="6" rx="3" fill="#f3e3a9"/></svg>',
+    brille: '<svg viewBox="0 0 100 100"><circle cx="30" cy="54" r="19" fill="#1c1b1a"/><circle cx="70" cy="54" r="19" fill="#1c1b1a"/><path d="M48 52c2-3 4-3 6 0M11 50 4 40M89 50l7-10" stroke="#1c1b1a" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M22 46a12 12 0 0 1 10-4M62 46a12 12 0 0 1 10-4" stroke="#fff" stroke-opacity=".5" stroke-width="3" stroke-linecap="round" fill="none"/></svg>',
+    lampe: '<svg viewBox="0 0 100 100"><path d="M28 50 40 14h20l12 36Z" fill="#f3b23a"/><rect x="47" y="50" width="6" height="34" fill="#3d302b"/><ellipse cx="50" cy="88" rx="20" ry="6" fill="#3d302b"/><path d="M40 58c4 4 16 4 20 0" stroke="#fff3c0" stroke-width="3" fill="none" stroke-linecap="round"/></svg>',
+    tasse: '<svg viewBox="0 0 100 100"><path d="M18 30h56v34a24 24 0 0 1-24 24h-8a24 24 0 0 1-24-24Z" fill="#fff" stroke="#1c1b1a" stroke-width="4" stroke-linejoin="round"/><path d="M74 38h6a10 10 0 0 1 0 22h-8" fill="none" stroke="#1c1b1a" stroke-width="4"/><path d="M18 44h56" stroke="#e4572e" stroke-width="7"/><path d="M36 20c-3-4 3-6 0-10M50 20c-3-4 3-6 0-10M64 20c-3-4 3-6 0-10" stroke="#a29d94" stroke-width="3" stroke-linecap="round" fill="none"/></svg>',
+    pullover: '<svg viewBox="0 0 100 100"><path d="M34 14 18 24 6 62l14 5 6-16v40h48V51l6 16 14-5-12-38-16-10c-3 8-8 12-16 12s-13-4-16-12Z" fill="#7d8fb3" stroke="#5a6b8c" stroke-width="3" stroke-linejoin="round"/><path d="M26 82h48" stroke="#5a6b8c" stroke-width="4"/></svg>'
+  };
+  const products = [
+    { id: 1, name: 'Kopfhörer Aura',  cat: 'Audio',       price: 129,  old: 159,  rate: 4.8, n: 312, art: 'kopfhoerer', bg: '#f6d9c7', tag: 'Sale' },
+    { id: 2, name: 'Smartwatch Ora',  cat: 'Accessoires', price: 189,            rate: 4.6, n: 128, art: 'uhr',        bg: '#e3dfd6', tag: 'Neu' },
+    { id: 3, name: 'Sneaker Cloud',   cat: 'Mode',        price: 94.9,           rate: 4.7, n: 540, art: 'sneaker',    bg: '#d5e4d0' },
+    { id: 4, name: 'Rucksack Fjord',  cat: 'Accessoires', price: 79,   old: 99,   rate: 4.9, n: 221, art: 'rucksack',   bg: '#dcd6ee', tag: 'Sale' },
+    { id: 5, name: 'Sonnenbrille Nox',cat: 'Accessoires', price: 59,             rate: 4.5, n: 89,  art: 'brille',     bg: '#f3e3a9' },
+    { id: 6, name: 'Tischlampe Glow', cat: 'Wohnen',      price: 68,             rate: 4.8, n: 176, art: 'lampe',      bg: '#f9dcd2', tag: 'Neu' },
+    { id: 7, name: 'Keramiktasse Fika',cat: 'Wohnen',     price: 18.5,           rate: 4.9, n: 402, art: 'tasse',      bg: '#d8e6ee' },
+    { id: 8, name: 'Pullover Fjell',  cat: 'Mode',        price: 84,   old: 110,  rate: 4.7, n: 265, art: 'pullover',   bg: '#e2e7f2', tag: 'Sale' }
+  ];
+
+  const eur = n => n.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+  const $ = s => document.querySelector(s);
+  let filter = 'Alle';
+  let cart = {};      // id -> Menge
+  const favs = new Set();
+
+  function renderFilters() {
+    const cats = ['Alle', ...new Set(products.map(p => p.cat))];
+    $('#filters').innerHTML = cats.map(c => `<button class="chip ${c === filter ? 'on' : ''}" data-c="${c}">${c}</button>`).join('');
+  }
+  function renderGrid() {
+    const list = products.filter(p => filter === 'Alle' || p.cat === filter);
+    $('#grid').innerHTML = list.map(p => `
+      <article class="card">
+        <div class="thumb" style="background:${p.bg}">
+          ${p.tag ? `<span class="pill ${p.tag === 'Sale' ? 'sale' : ''}">${p.tag === 'Sale' ? '−' + Math.round((1 - p.price / p.old) * 100) + ' %' : p.tag}</span>` : ''}
+          <button class="fav ${favs.has(p.id) ? 'on' : ''}" data-fav="${p.id}" aria-label="Merken"><svg viewBox="0 0 24 24"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.8-8 11-8 11Z"/></svg></button>
+          ${art[p.art]}
+        </div>
+        <div class="info">
+          <span class="cat-name">${p.cat}</span>
+          <h3>${p.name}</h3>
+          <div class="rating"><b>★</b> ${p.rate.toString().replace('.', ',')} (${p.n})</div>
+          <div class="buy">
+            <div class="price">${eur(p.price)}${p.old ? `<s>${eur(p.old)}</s>` : ''}</div>
+            <button class="add" data-add="${p.id}" aria-label="In den Warenkorb">+</button>
+          </div>
+        </div>
+      </article>`).join('');
+  }
+  function renderCart() {
+    const ids = Object.keys(cart);
+    const count = ids.reduce((s, id) => s + cart[id], 0);
+    const sub = ids.reduce((s, id) => s + cart[id] * products.find(p => p.id == id).price, 0);
+    const ship = !count ? 0 : sub >= 50 ? 0 : 4.9;
+    $('#count').textContent = count;
+    $('#lines').innerHTML = ids.length ? ids.map(id => {
+      const p = products.find(x => x.id == id);
+      return `<div class="line">
+        <div class="mini" style="background:${p.bg}">${art[p.art]}</div>
+        <div><b>${p.name}</b><small>${eur(p.price)}</small><br>
+          <span class="qty"><button data-dec="${id}">−</button>${cart[id]}<button data-inc="${id}">+</button></span></div>
+        <b>${eur(p.price * cart[id])}</b></div>`;
+    }).join('') : '<div class="empty">Dein Warenkorb ist noch leer.<br>Stöbere ein bisschen 🙂</div>';
+    $('#sub').textContent = eur(sub);
+    $('#ship').textContent = !count ? '–' : ship ? eur(ship) : 'Kostenlos';
+    $('#total').textContent = eur(sub + ship);
+  }
+  function toast(msg) {
+    const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+    clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2200);
+  }
+  function drawer(open) { $('#drawer').classList.toggle('open', open); $('#scrim').classList.toggle('open', open); }
+
+  document.addEventListener('click', e => {
+    const t = e.target.closest('button, .cat'); if (!t) return;
+    if (t.dataset.c) { filter = t.dataset.c; renderFilters(); renderGrid(); }
+    if (t.classList.contains('cat')) { filter = t.dataset.f; renderFilters(); renderGrid(); }
+    if (t.dataset.add) {
+      cart[t.dataset.add] = (cart[t.dataset.add] || 0) + 1; renderCart();
+      const b = $('#count'); b.classList.add('pop'); setTimeout(() => b.classList.remove('pop'), 200);
+      toast(products.find(p => p.id == t.dataset.add).name + ' im Warenkorb');
+    }
+    if (t.dataset.inc) { cart[t.dataset.inc]++; renderCart(); }
+    if (t.dataset.dec) { if (--cart[t.dataset.dec] <= 0) delete cart[t.dataset.dec]; renderCart(); }
+    if (t.dataset.fav) { const id = +t.dataset.fav; favs.has(id) ? favs.delete(id) : favs.add(id); t.classList.toggle('on'); }
+  });
+  $('#openCart').onclick = () => drawer(true);
+  $('#closeCart').onclick = $('#scrim').onclick = () => drawer(false);
+  document.addEventListener('keydown', e => e.key === 'Escape' && drawer(false));
+
+  renderFilters(); renderGrid(); renderCart();
+</script>
+</body>
+</html>
