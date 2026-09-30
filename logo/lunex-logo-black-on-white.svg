@@ -1,11 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 412 160" width="412" height="160" role="img" aria-label="LUNEX">
-  <rect width="412" height="160" fill="#ffffff"/>
-  <defs><clipPath id="c"><rect x="0" y="50" width="412" height="60"/></clipPath></defs>
-  <g clip-path="url(#c)" fill="none" stroke="#000000" stroke-width="5" stroke-linecap="butt" stroke-linejoin="miter">
-    <path d="M40 50 V110 H80"/>
-    <path d="M110 50 V88 A22 22 0 0 0 154 88 V50"/>
-    <path d="M184 110 V50 M184 50 L228 110 M228 110 V50"/>
-    <path d="M298 50 H258 V110 H298 M258 80 H292"/>
-    <path d="M328 50 L372 110 M372 50 L328 110"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 240" width="560" height="240" role="img" aria-label="lunex">
+  <rect width="560" height="240" fill="#ffffff"/>
+  <g transform="rotate(-4 280 120)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <g transform="translate(9 10)" stroke="#000000" stroke-width="34"><path d="M50 60 V150 H105"/><path d="M145 60 V120 A30 30 0 0 0 205 120 V60"/><path d="M250 155 V60 L310 155 V60"/><path d="M395 60 H355 V155 H395 M355 108 H388"/><path d="M440 60 L495 155 M495 60 L440 155"/></g>
+    <g stroke="#000000" stroke-width="34"><path d="M50 60 V150 H105"/><path d="M145 60 V120 A30 30 0 0 0 205 120 V60"/><path d="M250 155 V60 L310 155 V60"/><path d="M395 60 H355 V155 H395 M355 108 H388"/><path d="M440 60 L495 155 M495 60 L440 155"/></g>
+    <g stroke="#ffffff" stroke-width="18"><path d="M50 60 V150 H105"/><path d="M145 60 V120 A30 30 0 0 0 205 120 V60"/><path d="M250 155 V60 L310 155 V60"/><path d="M395 60 H355 V155 H395 M355 108 H388"/><path d="M440 60 L495 155 M495 60 L440 155"/></g>
+    <g stroke="#000000" stroke-width="3" transform="translate(-3 -3)" stroke-dasharray="14 200"><path d="M50 60 V150 H105"/><path d="M145 60 V120 A30 30 0 0 0 205 120 V60"/><path d="M250 155 V60 L310 155 V60"/><path d="M395 60 H355 V155 H395 M355 108 H388"/><path d="M440 60 L495 155 M495 60 L440 155"/></g>
+    <g stroke="#000000" stroke-width="6">
+      <path d="M60 172 V200"/><path d="M158 172 V192"/><path d="M262 172 V210"/><path d="M370 172 V196"/><path d="M482 172 V204"/>
+    </g>
+    <g fill="#000000" stroke="none">
+      <circle cx="60" cy="204" r="6"/><circle cx="158" cy="196" r="5"/><circle cx="262" cy="214" r="7"/><circle cx="370" cy="200" r="5"/><circle cx="482" cy="208" r="6"/>
+      <circle cx="30" cy="40" r="4"/><circle cx="530" cy="60" r="5"/><circle cx="520" cy="30" r="3"/><circle cx="40" cy="190" r="3"/>
+    </g>
+    <path d="M40 30 L34 44 M28 36 L40 38 M525 100 L525 116 M517 108 L533 108" stroke="#000000" stroke-width="3"/>
   </g>
 </svg>
