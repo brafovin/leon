@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="strap" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2b2320"/><stop offset=".5" stop-color="#4a3a34"/><stop offset="1" stop-color="#2b2320"/></linearGradient>
+    <linearGradient id="case" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f1f1f1"/><stop offset=".5" stop-color="#9a9a9a"/><stop offset="1" stop-color="#e2e2e2"/></linearGradient>
+    <radialGradient id="face" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="#2a2624"/><stop offset="1" stop-color="#0d0c0b"/></radialGradient>
+    <line id="tick" x1="100" y1="66" x2="100" y2="71" stroke="#e8e2d9" stroke-width="2" stroke-linecap="round"/>
+  </defs>
+  <ellipse cx="100" cy="188" rx="40" ry="5" fill="#000" opacity=".15"/>
+  <path d="M74 6 H126 L120 66 H80 Z" fill="url(#strap)"/>
+  <path d="M80 134 H120 L126 186 H74 Z" fill="url(#strap)"/>
+  <path d="M84 12 L88 62 M116 12 L112 62" stroke="#8a766b" stroke-width="1.2" stroke-dasharray="3 3" opacity=".7"/>
+  <path d="M88 138 L84 182 M112 138 L116 182" stroke="#8a766b" stroke-width="1.2" stroke-dasharray="3 3" opacity=".7"/>
+  <circle cx="106" cy="160" r="2.6" fill="#1c1b1a"/><circle cx="106" cy="170" r="2.6" fill="#1c1b1a"/>
+  <rect x="138" y="90" width="9" height="20" rx="3" fill="#b8b8b8"/>
+  <rect x="140" y="92" width="3" height="16" rx="1.5" fill="#e4572e"/>
+  <circle cx="100" cy="100" r="46" fill="url(#case)"/>
+  <circle cx="100" cy="100" r="41" fill="#3a3532"/>
+  <circle cx="100" cy="100" r="37" fill="url(#face)"/>
+  <use href="#tick"/><use href="#tick" transform="rotate(30 100 100)"/><use href="#tick" transform="rotate(60 100 100)"/><use href="#tick" transform="rotate(90 100 100)"/>
+  <use href="#tick" transform="rotate(120 100 100)"/><use href="#tick" transform="rotate(150 100 100)"/><use href="#tick" transform="rotate(180 100 100)"/><use href="#tick" transform="rotate(210 100 100)"/>
+  <use href="#tick" transform="rotate(240 100 100)"/><use href="#tick" transform="rotate(270 100 100)"/><use href="#tick" transform="rotate(300 100 100)"/><use href="#tick" transform="rotate(330 100 100)"/>
+  <text x="100" y="124" text-anchor="middle" font-family="system-ui,sans-serif" font-size="7" font-weight="700" fill="#e4572e">72 ♥</text>
+  <line x1="100" y1="100" x2="100" y2="82" stroke="#f4efe8" stroke-width="4" stroke-linecap="round" transform="rotate(-60 100 100)"/>
+  <line x1="100" y1="100" x2="100" y2="72" stroke="#f4efe8" stroke-width="3" stroke-linecap="round" transform="rotate(60 100 100)"/>
+  <line x1="100" y1="108" x2="100" y2="68" stroke="#e4572e" stroke-width="1.5" stroke-linecap="round" transform="rotate(150 100 100)"/>
+  <circle cx="100" cy="100" r="3.5" fill="#e4572e"/><circle cx="100" cy="100" r="1.3" fill="#0d0c0b"/>
+  <path d="M68 78 A37 37 0 0 1 118 66" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".16"/>
+</svg>
